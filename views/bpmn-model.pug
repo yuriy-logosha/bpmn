@@ -1,0 +1,47 @@
+doctype html
+html
+    head
+        link(rel='stylesheet', href='/bootstrap.css')
+        link(rel='stylesheet', href='/bpmn-font/css/bpmn.css')
+        link(rel='stylesheet', href='/diagram-js.css')
+
+        script(data-main="/javascripts/app-bpmn.js" src="/javascripts/require.js")
+
+
+        style.
+            html, body, #canvas {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            #control-panel {
+                position: fixed;
+                bottom: 20px;
+
+            }
+
+            .form-control {
+                font-size: 11px;
+                height: auto;
+            }
+
+
+        body
+            div#canvas
+            div.btn-toolbar#control-panel
+                div.btn-group.mr-2
+                    select.form-control#menu
+                div.btn-group.mr-2
+                    button.btn.btn-light.btn-sm#save-button Save
+                div.btn-group.mr-2
+                    div.input-group
+                        input.form-control#new-name
+                        button.btn.btn-light.btn-sm#save-as-button Save As
+                span.icon-download
+                button.btn.btn-light.btn-sm#delete-button Delete
+
+            script.
+
+
+

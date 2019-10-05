@@ -1,0 +1,39 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='/bootstrap.css')
+    link(rel='stylesheet', href='/bpmn-font/css/bpmn.css')
+    link(rel='stylesheet', href='/diagram-js.css')
+
+
+    script(type='text/javascript', src='/javascripts/jquery.js')
+    script(type='text/javascript', src='/javascripts/bpmn-viewer.js')
+    script(type='text/javascript', src='/javascripts/common.js')
+    style.
+        html, body, #canvas {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+    body
+        select#menu
+        div#canvas
+        script.
+
+            var bpmnModeler = new BpmnJS({
+                container: '#canvas'
+            });
+
+            $('#menu').change(function () {
+                var diagramUrl = $("#menu option:selected").val();
+                if (diagramUrl === '') {
+                    bpmnModeler.clear();
+                } else {
+                    $.get(diagramUrl, openDiagram, 'text');
+                }
+            });
+
+            $.getJSON('/files', processMenuItems);
+
+
