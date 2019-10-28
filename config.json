@@ -4,15 +4,14 @@
     "app_name": "bpmn",
     "app_desc": "Some help services",
     "ip": "localhost",
-    "node_port": 3000,
+    "node_port": 8084,
     "json_indentation": 4,
     "uploads": "./uploads"
   },
   "production": {
     "config_id": "prod",
     "ip": "87.99.81.19",
-    "node_port": 3000,
-    "gameroom_chat_port": 1338,
-    "uploads": "/samba/c/bpmn/uploads"
+    "node_port": 8084,
+    "uploads": "./uploads"
   }
 }
