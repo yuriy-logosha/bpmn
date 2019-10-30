@@ -34,14 +34,9 @@ router.post('/', upload.single('file'), function (req, res) {
 
 router.delete('/', viewerController.deleteFile);
 
-router.get('/view', function (req, res, next) {
-    res.render('bpmn-view', viewerController);
+router.get('/view/:filename', function (req, res, next) {
+    res.render('bpmn-view', {file:req.params.filename});
 });
-
-// router.get('/view/:filename', function (req, res, next) {
-//     let filename = req.params.filename;
-//     res.render('bpmn-view', viewerController);
-// });
 
 router.get('/files', function (req, res, next) {
     res.json(viewerController.getFiles());

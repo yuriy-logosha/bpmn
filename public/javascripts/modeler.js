@@ -20,7 +20,7 @@ requirejs(['jquery', 'bpmn-modeler'], function   ($, BpmnJS) {
         //bpmnModeler.addCustomElements(customElements);
     }
 
-    function saveDiagram(e) {
+    $('#save-button').click((e) => {
 
         bpmnModeler.saveXML({format: true}, function (err, xml) {
 
@@ -58,9 +58,9 @@ requirejs(['jquery', 'bpmn-modeler'], function   ($, BpmnJS) {
                 }
             });
         });
-    }
+    })
 
-    function saveAsDiagram(e) {
+    $('#save-as-button').click((e) => {
 
         bpmnModeler.saveXML({format: true}, function (err, xml) {
 
@@ -103,7 +103,7 @@ requirejs(['jquery', 'bpmn-modeler'], function   ($, BpmnJS) {
                 }
             });
         });
-    }
+    })
 
     function buildCustomModeler(id) {
         return new BpmnJS({
@@ -114,20 +114,13 @@ requirejs(['jquery', 'bpmn-modeler'], function   ($, BpmnJS) {
         });
     }
 
-
     var newItemName = '!{getNew()}';
 
     var bpmnModeler = buildCustomModeler('canvas');
 
     bpmnModeler.createDiagram();
 
-    $('#save-button').click(saveDiagram);
-
-    $('#save-as-button').click(saveAsDiagram);
-
-    $('#delete-button').click(deleteDiagram);
-
-    function deleteDiagram() {
+    $('#delete-button').click(() => {
         var fileName = $("#menu option:selected").val();
         $.ajax({
             url: window.location,
@@ -140,7 +133,7 @@ requirejs(['jquery', 'bpmn-modeler'], function   ($, BpmnJS) {
                 alert(data.responseText);
             }
         });
-    }
+    })
 
     $('#menu').change(function () {
         var diagramUrl = $("#menu option:selected").val();
@@ -153,7 +146,5 @@ requirejs(['jquery', 'bpmn-modeler'], function   ($, BpmnJS) {
     });
 
     $.getJSON('/files', processMenuItems);
-
-
 
 });

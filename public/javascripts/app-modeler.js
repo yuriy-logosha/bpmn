@@ -6,7 +6,7 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'bootstrap', 'modeler-common'],
-    function   ($) {
+requirejs(['jquery', 'bootstrap', 'modeler'],
+    function   ($, b, m) {
 
     });
