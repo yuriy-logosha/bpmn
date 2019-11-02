@@ -1,7 +1,7 @@
 let path = require('path');
 let fs = require('fs');
 
-function _getFiles() {
+function _getDiagrams() {
     let result = [];
 
     fs.readdirSync(global.gConfig.uploads)
@@ -16,8 +16,23 @@ function _getFiles() {
     return result;
 }
 
+function _getGenerated() {
+    let result = [];
+
+    fs.readdirSync(global.gConfig.uploads)
+        .filter(fileName => path.extname(fileName) === '.py')
+        .forEach(fileName => result.push(
+            {
+                'display': fileName.split('.')[0],
+                'file': fileName,
+                'link': 'files/'+fileName.split('.')[0]
+            }
+        ));
+    return result;
+}
+
 function _getFile (fileName) {
-    let filesArr = _getFiles();
+    let filesArr = _getDiagrams();
 
     return filesArr.find(el => {if(fileName == el.file) return el});
 }
@@ -46,6 +61,7 @@ module.exports = {
         }
     },
     getNew: function() { return newFile },
-    getFiles: function () { return _getFiles() },
-    getFile: function (fileName) { return _getFile(fileName) }
+    getFiles: function () { return _getDiagrams() },
+    getFile: function (fileName) { return _getFile(fileName) },
+    getGenerated: function () { return _getGenerated() },
 };

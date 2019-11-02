@@ -42,4 +42,8 @@ router.get('/files', function (req, res, next) {
     res.json(viewerController.getFiles());
 });
 
+router.get('/generated', function (req, res, next) {
+    res.json(viewerController.getGenerated());
+});
+
 module.exports = router;
