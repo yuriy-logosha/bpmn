@@ -1,29 +1,22 @@
 requirejs.config({
     baseUrl: '/javascripts',
     paths: {
-        'app': 'app',
-        'popper': 'javascripts/popper',
+        'app': 'app'
     }
 });
 
-requirejs(['jquery', 'bootstrap', 'bpmn-viewer'],
+requirejs(['jquery', 'bootstrap.bundle', 'bpmn-viewer'],
     function   ($, bootstrap, BpmnJS) {
-        $.get("/"+diagramUrl, (bpmnXML) => {
+        $.get("/"+diagram+".bpmn", (bpmnXML) => {
+            var bpmnModeler = new BpmnJS({
+                container: '#canvas'
+            });
             bpmnModeler.importXML(bpmnXML, function (err) {
                 if (err) {
                     return console.error('could not import BPMN 2.0 diagram', err);
                 }
-                var canvas = bpmnModeler.get('canvas');
-                var overlays = bpmnModeler.get('overlays');
-                canvas.zoom('fit-viewport');
             });
+            bpmnModeler.get('canvas').zoom('fit-viewport');
         }, 'text');
 
-        function buildCustomModeler(id) {
-            return new BpmnJS({
-                container: '#' + id
-            });
-        }
-
-        var bpmnModeler = buildCustomModeler('canvas');
     });

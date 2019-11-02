@@ -1,23 +1,23 @@
-var path = require('path');
-var fs = require('fs');
-
-var newFile = 'New...';
-
-function createEmptyItem() {
-    return {display: newFile, file:''};
-}
+let path = require('path');
+let fs = require('fs');
 
 function _getFiles() {
-    let result = [createEmptyItem()];
+    let result = [];
 
     fs.readdirSync(global.gConfig.uploads)
         .filter(fileName => path.extname(fileName) === '.bpmn')
-        .forEach(fileName => result.push({'display': fileName.split('.')[0], 'file': fileName}));
+        .forEach(fileName => result.push(
+            {
+                'display': fileName.split('.')[0],
+                'file': fileName,
+                'link': 'files/'+fileName.split('.')[0]
+            }
+            ));
     return result;
 }
 
 function _getFile (fileName) {
-    var filesArr = _getFiles();
+    let filesArr = _getFiles();
 
     return filesArr.find(el => {if(fileName == el.file) return el});
 }
@@ -30,7 +30,7 @@ module.exports = {
                 return res.status(400).send('Empty file name.');
             }
 
-            var file = _getFile(fileName);
+            let file = _getFile(fileName);
 
             if (!file || !file.hasOwnProperty('file')){
                 return res.status(400).send('Wrong file name.');

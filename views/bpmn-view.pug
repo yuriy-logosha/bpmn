@@ -1,12 +1,12 @@
 doctype html
 html
   head
-    link(rel='stylesheet', href='/bootstrap.css')
+    link(rel='stylesheet', href='/bootstrap.min.css')
     link(rel='stylesheet', href='/bpmn-font/css/bpmn.css')
     link(rel='stylesheet', href='/diagram-js.css')
 
     script.
-        var diagramUrl = "#{file}";
+        let diagram = "#{diagram}";
 
 
     script(data-main="/javascripts/app-viewer.js" src="/javascripts/require.js")

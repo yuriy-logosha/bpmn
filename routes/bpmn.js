@@ -1,7 +1,7 @@
 var common = require('../common');
 var express = require('express');
 let path = require('path');
-var router = express.Router({strict: true});
+var router = express.Router({strict: false});
 var viewerController = require('../controllers/viewer-controller');
 
 var multer  = require('multer');
@@ -34,8 +34,8 @@ router.post('/', upload.single('file'), function (req, res) {
 
 router.delete('/', viewerController.deleteFile);
 
-router.get('/view/:filename', function (req, res, next) {
-    res.render('bpmn-view', {file:req.params.filename});
+router.get('/files/:filename', function (req, res, next) {
+    res.render('bpmn-view', {diagram: req.params.filename});
 });
 
 router.get('/files', function (req, res, next) {
