@@ -5,8 +5,10 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler', 'BaseRenderer'.default],
-    function   ($, bootstrap, BpmnJS, BaseRenderer) {
+
+requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
+    function   ($, bootstrap, BpmnJS) {
+
         function processMenuItems(items) {
             $('#menu').empty();
 
@@ -377,6 +379,9 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler', 'BaseRenderer'.default]
                 .remove();
 
             $.get(diagramName, openDiagram, 'text');
+
+            $('#get_py_button_container').attr("href", $("#menu option:selected").text()+'.py');
+
         });
 
         $.getJSON('/files', processMenuItems);
