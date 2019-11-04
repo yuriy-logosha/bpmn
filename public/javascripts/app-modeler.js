@@ -5,6 +5,15 @@ requirejs.config({
     }
 });
 
+let showError = (text) => {
+    $('#error > .toast-body').text(text);
+    $('#error').toast('show');
+};
+
+let notify = (message) => {
+    $('#notify > .toast-body').text(message);
+    $('#notify').toast('show');
+};
 
 requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
     function   ($, bootstrap, BpmnJS) {
@@ -36,23 +45,15 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
 
 
         $('#save-button').click((e) => {
-
             bpmnModeler.saveXML({format: true}, function (err, xml) {
 
-                if (err) {
-                    return console.error('could not save BPMN 2.0 diagram', err);
-                }
+                if (err) return console.error('could not save BPMN 2.0 diagram', err);
 
                 let fileName = $("#menu option:selected").text();
 
-                if (fileName === newItemName || fileName === '') {
-                    alert("File name can't be empty.");
-                    return;
-                }
+                if (fileName === '') return showError("File name can't be empty.");
 
-                if (!confirm('Are you sure you want to save this diagram with name "' + fileName + '"?')) {
-                    return;
-                }
+                if (!confirm('Are you sure you want to save this diagram with name "' + fileName + '"?')) return;
 
                 let data = new FormData();
                 data.append(fileName, xml);
@@ -65,38 +66,34 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
                     processData: false,
                     method: 'POST',
                     type: 'POST', // For jQuery < 1.9
-                    success: function (data) {
-                        $('#notify > .toast-body').text(data.message);
-                        $('#notify').toast('show');
-                    },
-                    error: function (data) {
-                        $('#error > .toast-body').text(data.responseText);
-                        $('#error').toast('show');
-                    }
+                    success: (data) => notify(data.message),
+                    error: (data) => showError(data.responseText)
                 });
             });
         });
 
-        $('#save-as-button').click((e) => {
+        $('#new-name').on("keyup", (e) => {
+            if (e.keyCode == 13) {
+                saveDiagram(e);
+                return false;
+            }
+        });
 
-            bpmnModeler.saveXML({format: true}, function (err, xml) {
+        $('#save-as-button').click((e) => saveDiagram(e));
 
-                if (err) {
-                    return console.error('Could not save BPMN diagram', err);
-                }
+        let saveDiagram = () => {
 
-                var fileName = $('#new-name').val();
+            bpmnModeler.saveXML({format: true}, (err, xml) => {
 
-                if (fileName === '') {
-                    alert("File name can't be empty.");
-                    return;
-                }
+                if (err) return showError("Could not save BPMN diagram.");
 
-                if (!confirm('Are you sure you want to save this diagram with name "' + fileName + '"?')) {
-                    return;
-                }
+                let fileName = $('#new-name').val();
 
-                var data = new FormData();
+                if (fileName === '') return showError("File name can't be empty.");
+
+                if (!confirm('Are you sure you want to save this diagram with name "' + fileName + '"?')) return;
+
+                let data = new FormData();
                 data.append(fileName, xml);
 
                 jQuery.ajax({
@@ -107,22 +104,18 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
                     processData: false,
                     method: 'POST',
                     type: 'POST', // For jQuery < 1.9
-                    success: function (data) {
+                    success: (data) => {
                         $('#menu').val(data.file.file);
                         if ($('#menu').val() === null) {
                             $('#menu').append($("<option></option>").val(data.file.file).text(data.file.display));
                             $('#menu').val(data.file.file);
                         }
-                        $('#notify > .toast-body').text(data.message);
-                        $('#notify').toast('show');
+                        notify(data.message);
                     },
-                    error: function (data) {
-                        $('#error > .toast-body').text(data.responseText);
-                        $('#error').toast('show');
-                    }
+                    error: (data) => showError(data.responseText)
                 });
             });
-        });
+        };
 
         function CustomPalette(bpmnFactory, create, elementFactory, palette, translate) {
 
@@ -228,120 +221,14 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
             'translate'
         ];
 
-        // let BaseRenderer = require('BaseRenderer').default;
-
-        // class CustomRenderer extends BaseRenderer {
-        //     constructor(eventBus, bpmnRenderer) {
-        //         super(eventBus, HIGH_PRIORITY);
-        //
-        //         this.bpmnRenderer = bpmnRenderer;
-        //     }
-        //
-        //     canRender(element) {
-        //
-        //         // ignore labels
-        //         return !element.labelTarget;
-        //     }
-        //
-        //     drawShape(parentNode, element) {
-        //         const shape = this.bpmnRenderer.drawShape(parentNode, element);
-        //
-        //         const suitabilityScore = this.getSuitabilityScore(element);
-        //
-        //         if (!isNil(suitabilityScore)) {
-        //             const color = this.getColor(suitabilityScore);
-        //
-        //             const rect = drawRect(parentNode, 50, 20, TASK_BORDER_RADIUS, color);
-        //
-        //             svgAttr(rect, {
-        //                 transform: 'translate(-20, -10)'
-        //             });
-        //
-        //             var text = svgCreate('text');
-        //
-        //             svgAttr(text, {
-        //                 fill: '#fff',
-        //                 transform: 'translate(-15, 5)'
-        //             });
-        //
-        //             svgClasses(text).add('djs-label');
-        //
-        //             svgAppend(text, document.createTextNode(suitabilityScore));
-        //
-        //             svgAppend(parentNode, text);
-        //         }
-        //
-        //         return shape;
-        //     }
-        //
-        //     getShapePath(shape) {
-        //         if (is(shape, 'bpmn:Task')) {
-        //             return getRoundRectPath(shape, TASK_BORDER_RADIUS);
-        //         }
-        //
-        //         return this.bpmnRenderer.getShapePath(shape);
-        //     }
-        //
-        //     getSuitabilityScore(element) {
-        //         const businessObject = getBusinessObject(element);
-        //
-        //         const {suitable} = businessObject;
-        //
-        //         return Number.isFinite(suitable) ? suitable : null;
-        //     }
-        //
-        //     getColor(suitabilityScore) {
-        //         if (suitabilityScore > 75) {
-        //             return COLOR_GREEN;
-        //         } else if (suitabilityScore > 25) {
-        //             return COLOR_YELLOW;
-        //         }
-        //
-        //         return COLOR_RED;
-        //     }
-        // }
-        //
-        // CustomRenderer.$inject = ['eventBus', 'bpmnRenderer'];
-        //
-        // function drawRect(parentNode, width, height, borderRadius, color) {
-        //     const rect = svgCreate('rect');
-        //
-        //     svgAttr(rect, {
-        //         width: width,
-        //         height: height,
-        //         rx: borderRadius,
-        //         ry: borderRadius,
-        //         stroke: color,
-        //         strokeWidth: 2,
-        //         fill: color
-        //     });
-        //
-        //     svgAppend(parentNode, rect);
-        //
-        //     return rect;
-        // }
-        //
-        //
-
-
-
-        var bpmnModeler = new BpmnJS({
+        let bpmnModeler = new BpmnJS({
                 container: '#canvas',
                 keyboard: {
                     bindTo: window
                 }
-                ,
-                // additionalModules: [
-                //     {
-                //         contextPadProvider: [ 'type', CustomContextPad ],
-                //         customPalette: [ 'type', CustomPalette ]
-                //         ,
-                //         customRenderer: [ 'type', CustomRenderer ]
-                //     }
-                // ]
             });
 
-        var newItemName = '!{getNew()}';
+        let newItemName = '!{getNew()}';
 
         bpmnModeler.createDiagram();
 
@@ -359,19 +246,15 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
                         $('#deleted').toast('show');
                     }
                 },
-                error: function (data) {
-                    $('#error > .toast-body').text(data.responseText);
-                    $('#error').toast('show');
-                }
+                error: (data) => showError(data.responseText)
             });
         })
 
-        $('#menu').change(function () {
+        $('#menu').change(() => {
             const diagramName = $("#menu option:selected").val();
 
-            if (diagramName == '') {
-                return;
-            }
+            if (diagramName == '') return;
+
             $('#menu option')
                 .filter(function() {
                     return !this.value || $.trim(this.value).length == 0 || $.trim(this.text).length == 0;
@@ -379,10 +262,25 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
                 .remove();
 
             $.get(diagramName, openDiagram, 'text');
-
-            $('#get_py_button_container').attr("href", $("#menu option:selected").text()+'.py');
-
         });
+
+        $('#download-button').click((e) => {
+            fetch(window.location+$("#menu option:selected").text()+'.py')
+                .then(resp => resp.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    // the filename you want
+                    a.download = $("#menu option:selected").text()+'.py';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(() => showError(data.responseText));
+        });
+
 
         $.getJSON('/files', processMenuItems);
     });

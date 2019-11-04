@@ -46,6 +46,7 @@ html
                         span(aria-hidden='true') &times;
                 .toast-body Notification text!
 
+
             .toast#deleted(role="alert", style='position: absolute; top: 0; right: 0;', data-delay="6000")
                 .toast-header
                     strong.mr-auto Caption
@@ -54,24 +55,28 @@ html
                 .toast-body Successfully deleted!
 
 
-
-
             .btn-toolbar#control-panel
                 div.btn-group.mr-2
                     button.btn.btn-light.btn-sm#new-button New
+
                 div.btn-group.mr-2
                     select.form-control#menu
+
                 div.btn-group.mr-2
                     button.btn.btn-light.btn-sm#save-button Save
+
                 div.btn-group.mr-2
                     div.input-group
                         button.btn.btn-light.btn-sm#save-as-button Save As...
                         input.form-control#new-name
 
-                span.icon-download
-                button.btn.btn-light.btn-sm#delete-button Delete
+                div.btn-group.mr-2
+                    div.input-group
+                    button.btn.btn-light.btn-sm#delete-button Delete
 
-                a#get_py_button_container(href='/') Py
+                div.btn-group.mr-2
+                    div.input-group
+                    button.btn.btn-light.btn-sm#download-button Download
 
 
             .toast(role='alert' aria-live='polite' aria-atomic='true' data-delay='10000')
