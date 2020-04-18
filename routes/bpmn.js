@@ -46,4 +46,8 @@ router.get('/generated', function (req, res, next) {
     res.json(viewerController.getGenerated());
 });
 
+router.get('/generated/:filename', function (req, res, next) {
+    res.render('py-view', {pyfile: req.params.filename});
+});
+
 module.exports = router;

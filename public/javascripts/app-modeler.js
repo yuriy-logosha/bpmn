@@ -18,7 +18,7 @@ let notify = (message) => {
 requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
     function   ($, bootstrap, BpmnJS) {
 
-        function processMenuItems(items) {
+        let processMenuItems = (items) => {
             $('#menu').empty();
 
             $('#menu').append($("<option selected=\"selected\"></option>"));
@@ -26,9 +26,9 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
             $.each(items, function (index, item) {
                 $('#menu').append($("<option></option>").val(item.file).text(item.display))
             });
-        }
+        };
 
-        function openDiagram(bpmnXML) {
+        let openDiagram = (bpmnXML) => {
             bpmnModeler.importXML(bpmnXML, function (err) {
                 if (err) {
                     return console.error('Could not import BPMN diagram', err);
@@ -37,7 +37,7 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
                 var overlays = bpmnModeler.get('overlays');
                 canvas.zoom('fit-viewport');
             });
-        }
+        };
 
         $('#new-button').click((e) => {
             bpmnModeler.createDiagram();
@@ -255,6 +255,11 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
 
             if (diagramName == '') return;
 
+            setDiagram(diagramName);
+            sessionStorage.setItem('diagram', diagramName);
+        });
+
+        let setDiagram = (diagramName) => {
             $('#menu option')
                 .filter(function() {
                     return !this.value || $.trim(this.value).length == 0 || $.trim(this.text).length == 0;
@@ -262,7 +267,8 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
                 .remove();
 
             $.get(diagramName, openDiagram, 'text');
-        });
+            bpmnModeler.get('canvas').zoom('fit-viewport');
+        };
 
         $('#download-button').click((e) => {
             fetch(window.location+$("#menu option:selected").text()+'.py')
@@ -281,6 +287,14 @@ requirejs(['jquery', 'bootstrap.bundle', 'bpmn-modeler'],
                 .catch(() => showError(data.responseText));
         });
 
+        $('#view-button').click((e) => {
+            window.open(window.location+'generated/'+$("#menu option:selected").text());
+        });
 
-        $.getJSON('/files', processMenuItems);
+
+        $.when( $.ajax( "/files" ), sessionStorage.getItem('diagram') ).done(function( files, diagramName ) {
+            processMenuItems(files[0]);
+            $('#menu').val(diagramName);
+            setDiagram(diagramName);
+        });
     });

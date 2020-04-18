@@ -1,0 +1,24 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='/bootstrap.min.css')
+    link(rel='stylesheet', href='/cm/lib/codemirror.css')
+
+    script.
+        let pyfile = "#{pyfile}";
+
+
+    script(data-main="/javascripts/py-viewer.js" src="/javascripts/require.js")
+
+    style.
+        html, body, #canvas {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+    body
+        textarea#canvas
+
+
+

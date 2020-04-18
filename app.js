@@ -21,16 +21,14 @@ app.use(cookieParser());
 app.use(express.static(app.settings.public));
 app.use(express.static(global.gConfig.uploads));
 
+app.use('/javascripts/cm/', express.static(path.join(app.settings.node_modules, 'codemirror')));
+app.use('/javascripts', express.static(path.join(app.settings.node_modules, '/react/umd')));
+app.use('/javascripts', express.static(path.join(app.settings.node_modules, '/react-dom/umd')));
 app.use('/javascripts', express.static(path.join(app.settings.node_modules, 'jquery/dist')));
 app.use('/javascripts', express.static(path.join(app.settings.node_modules, 'bootstrap/dist/js')));
+app.use('/cm/', express.static(path.join(app.settings.node_modules, 'codemirror')));
 app.use(express.static(path.join(app.settings.node_modules, 'font-awesome/css')));
 app.use(express.static(path.join(app.settings.node_modules, 'bootstrap/dist/css')));
-// app.use('/js/popper-utils.js', express.static(path.join(app.settings.node_modules, 'popper.js/dist/umd/popper-utils.js')));
-// app.use('*/popper.js', express.static(path.join(app.settings.node_modules, 'popper.js/dist/umd/popper.js/popper.min.js.map')));
-
-// app.use(express.static(path.join(app.settings.node_modules, 'popper.js/dist/popper-utils.js')));
-// app.use(express.static(path.join(app.settings.node_modules, 'popper.js/dist/popper.js')));
-// app.use('*/popper.js/', express.static(path.join(app.settings.node_modules, 'popper.js/dist/popper.min.js')));
 
 app.use(express.static(path.join(app.settings.node_modules, 'bpmn-js/dist/assets')));
 app.use(express.static(path.join(app.settings.node_modules, 'bpmn-js/lib')));
@@ -39,8 +37,6 @@ app.use('/javascripts/bpmn-modeler.js', express.static(path.join(app.settings.no
 app.use('/javascripts/bpmn-viewer.js', express.static(path.join(app.settings.node_modules, 'bpmn-js/dist/bpmn-navigated-viewer.development.js')));
 
 app.use('/javascripts/require.js', express.static(path.join(app.settings.node_modules, 'requirejs/require.js')));
-// app.use('/javascripts/bootstrap.js', express.static(path.join(app.settings.node_modules, 'bootstrap/dist/js/bootstrap.min.js')));
-// app.use('/BaseRenderer.js', express.static(path.join(app.settings.node_modules, 'diagram-js/lib/draw/')));
 
 app.use('/', indexRouter);
 

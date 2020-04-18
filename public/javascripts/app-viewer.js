@@ -1,8 +1,5 @@
 requirejs.config({
-    baseUrl: '/javascripts',
-    paths: {
-        'app': 'app'
-    }
+    baseUrl: '/javascripts'
 });
 
 requirejs(['jquery', 'bootstrap.bundle', 'bpmn-viewer'],
